@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17365d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="NICU 6S">
+  <meta name="format-detection" content="telephone=no">
+  <title>NICU Mobile 6S Audit</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
+  <style>
+    :root {
+      --navy: #17365d;
+      --blue: #2f65a7;
+      --pale: #f3f6fa;
+      --border: #d7dee8;
+      --red: #b42318;
+      --green: #176b45;
+      --text: #172033;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #edf2f7;
+      color: var(--text);
+      font: 15px/1.45 Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      color: #fff;
+      padding: calc(24px + env(safe-area-inset-top)) 16px 24px;
+    }
+
+    header .inner,
+    main {
+      max-width: 1120px;
+      margin: auto;
+    }
+
+    h1 {
+      margin: 0 0 5px;
+      font-size: 26px;
+    }
+
+    header p {
+      margin: 0;
+      opacity: .92;
+    }
+
+    main {
+      padding: 18px 12px 60px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      margin: 0 0 16px;
+      box-shadow: 0 2px 8px #17365d12;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 0 0 12px;
+      color: var(--navy);
+    }
+
+    h3 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .muted {
+      color: #5e6b7b;
+    }
+
+    .required {
+      color: var(--red);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field label {
+      display: block;
+      font-weight: 700;
+      margin: 0 0 5px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #aeb9c8;
+      border-radius: 7px;
+      padding: 10px;
+      background: #fff;
+      font: inherit;
+      color: inherit;
+      min-height: 46px;
+    }
+
+    textarea {
+      min-height: 74px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 3px solid #2f65a722;
+      border-color: var(--blue);
+    }
+
+    .rolebar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .rolebar label {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      background: #fff;
+      font-weight: 700;
+    }
+
+    .rolebar input {
+      width: auto;
+      margin-right: 6px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .score {
+      font-weight: 700;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+
+    .criterion {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) 170px 1fr 170px;
+      gap: 10px;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .criterion:first-of-type {
+      border-top: 0;
+    }
+
+    .criterion-text {
+      font-weight: 600;
+    }
+
+    .criterion small {
+      display: block;
+      color: #6a7685;
+      font-weight: 400;
+      margin-top: 3px;
+    }
+
+    .capa {
+      display: grid;
+      grid-template-columns: 1.2fr 1.2fr 1.3fr .8fr .8fr 1.2fr 90px;
+      gap: 8px;
+      padding: 10px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .capa textarea {
+      min-height: 62px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 46px;
+      touch-action: manipulation;
+    }
+
+    .btn:disabled {
+      cursor: wait;
+      opacity: .65;
+    }
+
+    .primary {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .secondary {
+      background: #e5edf7;
+      color: var(--navy);
+    }
+
+    .danger {
+      background: #fee4e2;
+      color: var(--red);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .notice {
+      padding: 12px;
+      border-left: 4px solid var(--blue);
+      background: #edf5ff;
+      margin-bottom: 14px;
+    }
+
+    .error {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .success {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .loading {
+      opacity: .65;
+      pointer-events: none;
+    }
+
+    .sticky {
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+      box-shadow: 0 -3px 12px #17365d18;
+      z-index: 5;
+    }
+
+    .statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding-top: 10px;
+      font-size: 13px;
+    }
+
+    .connection {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #ffffff1f;
+    }
+
+    .connection-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #7ee2a8;
+    }
+
+    .connection.offline .connection-dot {
+      background: #fdb022;
+    }
+
+    .install-note {
+      margin-top: 10px;
+      font-size: 13px;
+      opacity: .9;
+    }
+
+    .loading-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #17365d55;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .loading-panel.active {
+      display: flex;
+    }
+
+    .loading-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 24px;
+      color: var(--navy);
+      font-weight: 700;
+      box-shadow: 0 12px 35px #0003;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      margin-right: 9px;
+      border: 3px solid #c8d6e8;
+      border-top-color: var(--navy);
+      border-radius: 50%;
+      vertical-align: -4px;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 900px) {
+      .criterion {
+        grid-template-columns: 1fr 150px;
+      }
+
+      .criterion .evidence,
+      .criterion .responsible {
+        grid-column: auto;
+      }
+
+      .capa {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .capa .remove {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .grid,
+      .criterion,
+      .capa {
+        grid-template-columns: 1fr;
+      }
+
+      .criterion .evidence,
+      .criterion .responsible,
+      .capa .remove {
+        grid-column: auto;
+      }
+
+      header {
+        padding-top: calc(18px + env(safe-area-inset-top));
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .card {
+        padding: 14px;
+      }
+
+      main {
+        padding: 12px 8px 86px;
+      }
+
+      .criterion {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 10px;
+        background: #fbfcfe;
+      }
+
+      .criterion-text {
+        color: var(--navy);
+      }
+
+      .criterion .evidence::before,
+      .criterion .responsible::before {
+        display: block;
+        margin-bottom: 4px;
+        color: #5e6b7b;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .criterion .evidence::before {
+        content: "EVIDENCE / FINDINGS";
+      }
+
+      .criterion .responsible::before {
+        content: "RESPONSIBLE PERSON";
+      }
+
+      .section-head,
+      .actions {
+        align-items: stretch;
+      }
+
+      .section-head {
+        flex-direction: column;
+      }
+
+      .section-head .btn,
+      .actions .btn {
+        width: 100%;
+      }
+
+      .sticky .actions {
+        display: grid;
+        grid-template-columns: 1fr auto;
+      }
+
+      .sticky #message {
+        grid-column: 1 / -1;
+      }
+
+      .sticky #submitBtn {
+        width: auto;
+        min-width: 128px;
+      }
+
+      .capa {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="inner">
+      <h1>NICU CQI Nurse and CQI Midwife 6S Audit</h1>
+      <p>Mobile-friendly continuous quality improvement checklist and action tracker</p>
+      <div class="statusbar">
+        <span id="connection" class="connection">
+          <span class="connection-dot" aria-hidden="true"></span>
+          <span id="connectionText">Online</span>
+        </span>
+        <span>Secure access only</span>
+      </div>
+      <div class="install-note">
+        Tip: Open the browser menu and choose “Add to Home screen” for app-like access.
+      </div>
+    </div>
+  </header>
+
+  <main id="app" class="loading">
+    <div class="notice">
+      <strong>Privacy:</strong>
+      Do not enter patient names, medical record numbers, or other
+      patient-identifying information. Escalate critical hazards immediately;
+      submitting this form does not replace emergency reporting.
+    </div>
+
+    <form id="auditForm">
+      <section class="card">
+        <h2>Audit Information</h2>
+
+        <div class="grid">
+          <div class="field">
+            <label>Facility <span class="required">*</span></label>
+            <input name="facility" required maxlength="200">
+          </div>
+
+          <div class="field">
+            <label>NICU or Unit <span class="required">*</span></label>
+            <input name="unit" required maxlength="200">
+          </div>
+
+          <div class="field">
+            <label>Audit Date and Time <span class="required">*</span></label>
+            <input type="datetime-local" name="auditDateTime" required>
+          </div>
+
+          <div class="field">
+            <label>Audit Type <span class="required">*</span></label>
+            <select name="auditType" id="auditType" required></select>
+          </div>
+
+          <div class="field">
+            <label>Auditor or Team <span class="required">*</span></label>
+            <input name="auditor" required maxlength="200">
+          </div>
+
+          <div class="field">
+            <label>Shift or Area Audited <span class="required">*</span></label>
+            <input name="shiftArea" required maxlength="200">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:14px">
+          <label>
+            Checklist to Complete <span class="required">*</span>
+          </label>
+
+          <div class="rolebar">
+            <label>
+              <input type="radio" name="role" value="Nurse" checked>
+              CQI Nurse
+            </label>
+
+            <label>
+              <input type="radio" name="role" value="Midwife">
+              CQI Midwife
+            </label>
+
+            <label>
+              <input type="radio" name="role" value="Both">
+              Both
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <div id="checklists"></div>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Corrective and Preventive Action Plan</h2>
+
+            <div class="muted">
+              Record partially compliant and noncompliant findings and assign
+              ownership.
+            </div>
+          </div>
+
+          <button class="btn secondary" type="button" id="addAction">
+            Add action
+          </button>
+        </div>
+
+        <div id="actionRows"></div>
+      </section>
+
+      <section class="card">
+        <h2>Audit Summary</h2>
+
+        <div class="grid">
+          <div class="field">
+            <label>Priority Level</label>
+
+            <select name="priority">
+              <option>Low</option>
+              <option>Moderate</option>
+              <option>High</option>
+              <option>Critical</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Follow-up Audit Date</label>
+            <input type="date" name="followUpDate">
+          </div>
+
+          <div class="field">
+            <label>Critical Hazards Identified</label>
+            <textarea name="criticalHazards" maxlength="2000"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Immediate Controls Applied</label>
+            <textarea name="immediateControls" maxlength="2000"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Top Improvement Priority</label>
+            <textarea name="topPriority" maxlength="1000"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Resources or Support Needed</label>
+            <textarea name="resourcesNeeded" maxlength="1000"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Reviewed By</label>
+            <input name="reviewer" maxlength="200">
+          </div>
+
+          <div class="field">
+            <label>NICU Head or Supervisor</label>
+            <input name="supervisor" maxlength="200">
+          </div>
+        </div>
+      </section>
+
+      <div class="sticky">
+        <div class="actions">
+          <span id="overallScore" class="score">Overall score: --</span>
+          <span id="message" role="status" aria-live="polite"></span>
+
+          <button class="btn primary" id="submitBtn" type="submit">
+            Submit Audit
+          </button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <div id="loadingPanel" class="loading-panel" role="status" aria-live="polite" aria-hidden="true">
+    <div class="loading-box">
+      <span class="spinner" aria-hidden="true"></span>
+      <span id="loadingText">Saving audit...</span>
+    </div>
+  </div>
+
+  <template id="actionTemplate">
+    <div class="capa">
+      <textarea
+        data-key="finding"
+        placeholder="Finding or risk"></textarea>
+
+      <textarea
+        data-key="rootCause"
+        placeholder="Root cause or contributing factor"></textarea>
+
+      <textarea
+        data-key="action"
+        placeholder="Corrective or preventive action"></textarea>
+
+      <input data-key="owner" placeholder="Owner">
+      <input data-key="targetDate" type="date">
+
+      <textarea
+        data-key="verification"
+        placeholder="Verification and closure"></textarea>
+
+      <button class="btn danger remove" type="button">
+        Remove
+      </button>
+    </div>
+  </template>
+
+  <script>
+    const API_URL =
+      'https://script.google.com/macros/s/AKfycbydhGq6Pi7BFzP8QvLlYvFh5cs-1PutBjuIl-ZIWYdv2LT8axM_F0xo3qi5KPN40FEgoQ/exec';
+
+    let MODEL = null;
+
+    const $ = selector => document.querySelector(selector);
+
+    const $$ = selector =>
+      Array.from(document.querySelectorAll(selector));
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateConnectionStatus();
+      window.addEventListener('online', updateConnectionStatus);
+      window.addEventListener('offline', updateConnectionStatus);
+
+      loadAppData();
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./service-worker.js')
+          .catch(error => console.warn('Service worker:', error));
+      }
+    });
+
+    function loadAppData() {
+      const callbackName = 'receiveNICU6SData';
+      const script = document.createElement('script');
+
+      window[callbackName] = data => {
+        delete window[callbackName];
+        script.remove();
+        init(data);
+      };
+
+      script.onerror = () => {
+        delete window[callbackName];
+        script.remove();
+        showError(new Error(
+          'Unable to load the checklist. Confirm that the Apps Script API deployment is active and accessible.'
+        ));
+      };
+
+      script.src = API_URL +
+        '?action=getAppData&callback=' +
+        encodeURIComponent(callbackName) +
+        '&t=' + Date.now();
+
+      document.head.appendChild(script);
+    }
+
+    function init(data) {
+      MODEL = data;
+
+      $('#auditType').innerHTML = data.auditTypes
+        .map(type => `<option>${escapeHtml(type)}</option>`)
+        .join('');
+
+      const now = new Date();
+
+      now.setMinutes(
+        now.getMinutes() - now.getTimezoneOffset()
+      );
+
+      $('[name="auditDateTime"]').value =
+        now.toISOString().slice(0, 16);
+
+      $$('[name="role"]').forEach(element =>
+        element.addEventListener('change', renderChecklists)
+      );
+
+      $('#addAction').addEventListener('click', addActionRow);
+
+      $('#auditForm').addEventListener(
+        'submit',
+        submitAudit
+      );
+
+      addActionRow();
+      renderChecklists();
+
+      $('#app').classList.remove('loading');
+    }
+
+    function selectedRoles() {
+      const role = $('[name="role"]:checked').value;
+
+      return role === 'Both'
+        ? ['Nurse', 'Midwife']
+        : [role];
+    }
+
+    function renderChecklists() {
+      const root = $('#checklists');
+
+      root.innerHTML = '';
+
+      selectedRoles().forEach(role => {
+        const roleTitle = document.createElement('section');
+
+        roleTitle.className = 'card';
+
+        roleTitle.innerHTML = `
+          <h2>CQI ${role} Checklist</h2>
+
+          <p class="muted">
+            Select one rating for every criterion.
+            C=2, PC=1, NC=0, and NA is excluded.
+          </p>
+        `;
+
+        root.appendChild(roleTitle);
+
+        MODEL.criteria[role].forEach(
+          (section, sectionIndex) =>
+            root.appendChild(
+              buildSection(
+                role,
+                section,
+                sectionIndex
+              )
+            )
+        );
+      });
+
+      updateScores();
+    }
+
+    function buildSection(role, section, sectionIndex) {
+      const card = document.createElement('section');
+
+      card.className = 'card';
+      card.dataset.role = role;
+      card.dataset.section = sectionIndex;
+
+      card.innerHTML = `
+        <div class="section-head">
+          <div>
+            <h3>
+              ${sectionIndex + 1}
+              ${escapeHtml(section.name)}
+            </h3>
+
+            <div class="muted">
+              ${escapeHtml(section.description)}
+            </div>
+          </div>
+
+          <span class="score section-score">
+            0 / ${section.criteria.length * 2}
+          </span>
+        </div>
+      `;
+
+      section.criteria.forEach(
+        (criterion, criterionIndex) => {
+          const id = criterionId(
+            role,
+            sectionIndex,
+            criterionIndex
+          );
+
+          const row = document.createElement('div');
+
+          row.className = 'criterion';
+
+          row.innerHTML = `
+            <div class="criterion-text">
+              ${criterionIndex + 1}.
+              ${escapeHtml(criterion)}
+            </div>
+
+            <div>
+              <select
+                class="rating"
+                data-id="${id}"
+                required>
+
+                <option value="">
+                  Select rating
+                </option>
+
+                <option value="C">
+                  C - Compliant
+                </option>
+
+                <option value="PC">
+                  PC - Partially compliant
+                </option>
+
+                <option value="NC">
+                  NC - Noncompliant
+                </option>
+
+                <option value="NA">
+                  NA - Not applicable
+                </option>
+              </select>
+            </div>
+
+            <div class="evidence">
+              <textarea
+                class="evidence-input"
+                data-id="${id}"
+                placeholder="Evidence and findings"
+                maxlength="2000"></textarea>
+            </div>
+
+            <div class="responsible">
+              <input
+                class="responsible-input"
+                data-id="${id}"
+                placeholder="Responsible person"
+                maxlength="200">
+            </div>
+          `;
+
+          row
+            .querySelector('.rating')
+            .addEventListener(
+              'change',
+              updateScores
+            );
+
+          card.appendChild(row);
+        }
+      );
+
+      return card;
+    }
+
+    function updateScores() {
+      let allEarned = 0;
+      let allMaximum = 0;
+
+      $$('#checklists .card[data-role]')
+        .forEach(card => {
+          let earned = 0;
+          let maximum = 0;
+
+          card
+            .querySelectorAll('.rating')
+            .forEach(select => {
+              if (
+                !select.value ||
+                select.value === 'NA'
+              ) {
+                return;
+              }
+
+              earned +=
+                MODEL.ratings[select.value].score;
+
+              maximum += 2;
+            });
+
+          card.querySelector(
+            '.section-score'
+          ).textContent =
+            `${earned} / ${maximum || card.querySelectorAll('.rating').length * 2}` +
+            (
+              maximum
+                ? ` (${Math.round(
+                    earned / maximum * 100
+                  )}%)`
+                : ''
+            );
+
+          allEarned += earned;
+          allMaximum += maximum;
+        });
+
+      $('#overallScore').textContent =
+        allMaximum
+          ? `Overall score: ${allEarned}/${allMaximum} ` +
+            `(${Math.round(
+              allEarned / allMaximum * 100
+            )}%)`
+          : 'Overall score: --';
+    }
+
+    function addActionRow() {
+      const node =
+        $('#actionTemplate')
+          .content
+          .firstElementChild
+          .cloneNode(true);
+
+      node
+        .querySelector('.remove')
+        .addEventListener(
+          'click',
+          () => node.remove()
+        );
+
+      $('#actionRows').appendChild(node);
+    }
+
+    function submitAudit(event) {
+      event.preventDefault();
+
+      const form = event.currentTarget;
+
+      if (!form.reportValidity()) {
+        return;
+      }
+
+      const missingRatings =
+        $$('.rating')
+          .filter(select => !select.value);
+
+      if (missingRatings.length) {
+        missingRatings[0].focus();
+
+        showMessage(
+          'Select a rating for every displayed criterion.',
+          true
+        );
+
+        return;
+      }
+
+      const formData = new FormData(form);
+
+      const payload =
+        Object.fromEntries(formData.entries());
+
+      payload.role =
+        $('[name="role"]:checked').value;
+
+      payload.ratings = {};
+      payload.evidence = {};
+      payload.responsible = {};
+
+      $$('.rating').forEach(select => {
+        payload.ratings[select.dataset.id] =
+          select.value;
+      });
+
+      $$('.evidence-input').forEach(textarea => {
+        payload.evidence[textarea.dataset.id] =
+          textarea.value;
+      });
+
+      $$('.responsible-input').forEach(input => {
+        payload.responsible[input.dataset.id] =
+          input.value;
+      });
+
+      payload.actions = $$('.capa').map(row => {
+        const action = {};
+
+        row
+          .querySelectorAll('[data-key]')
+          .forEach(input => {
+            action[input.dataset.key] =
+              input.value;
+          });
+
+        action.status = 'Open';
+
+        return action;
+      });
+
+      setBusy(true);
+
+      showMessage(
+        'Saving audit...',
+        false
+      );
+
+      const request = new URLSearchParams();
+      request.set('action', 'saveAudit');
+      request.set('payload', JSON.stringify(payload));
+
+      fetch(API_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: request.toString()
+      })
+        .then(() => {
+          showMessage(
+            'Audit sent. Please confirm that a new row appears in the Google Sheet.',
+            false,
+            true
+          );
+
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        })
+        .catch(showError)
+        .finally(() => setBusy(false));
+    }
+
+    function setBusy(busy) {
+      $('#submitBtn').disabled = busy;
+
+      $('#submitBtn').textContent = busy
+        ? 'Saving...'
+        : 'Submit Audit';
+
+      $('#auditForm').classList.toggle(
+        'loading',
+        busy
+      );
+
+      $('#loadingPanel').classList.toggle('active', busy);
+      $('#loadingPanel').setAttribute('aria-hidden', String(!busy));
+    }
+
+    function updateConnectionStatus() {
+      const element = $('#connection');
+      const label = $('#connectionText');
+
+      if (!element || !label) return;
+
+      const online = navigator.onLine;
+      element.classList.toggle('offline', !online);
+      label.textContent = online
+        ? 'Online'
+        : 'Offline — reconnect before submitting';
+    }
+
+    function showError(error) {
+      showMessage(
+        error && error.message
+          ? error.message
+          : String(error),
+        true
+      );
+
+      $('#app').classList.remove('loading');
+    }
+
+    function showMessage(
+      text,
+      error,
+      success
+    ) {
+      const element = $('#message');
+
+      element.textContent = text;
+
+      element.className =
+        error
+          ? 'error'
+          : success
+            ? 'success'
+            : 'muted';
+    }
+
+    function criterionId(
+      role,
+      sectionIndex,
+      criterionIndex
+    ) {
+      return (
+        role.charAt(0) +
+        '_' +
+        sectionIndex +
+        '_' +
+        criterionIndex
+      );
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(
+        /[&<>'"]/g,
+        character => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        })[character]
+      );
+    }
+  </script>
+</body>
+</html>
