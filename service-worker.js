@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nicu-6s-v1';
+const CACHE_NAME = 'nicu-6s-v7';
 const APP_FILES = [
   './',
   './index.html',
